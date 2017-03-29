@@ -1,12 +1,14 @@
 package ptit.ngocthien.bookstore;
 
+import java.io.Serializable;
+
 import Model.Book;
 
 /**
  * Created by TrungNguyen on 3/22/2017.
  */
 
-public class BookWithImage {
+public class BookWithImage implements Serializable {
     private Book book;
     private int image;
 

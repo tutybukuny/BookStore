@@ -15,8 +15,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+
 import ptit.ngocthien.bookstore.R;
 import ptit.ngocthien.bookstore.Request.SendRequest;
+
 import com.google.gson.Gson;
 
 import Model.Account;
@@ -27,10 +29,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
-    EditText _userName;
-    EditText _passwordText;
-    Button _loginButton;
-    TextView _signupLink;
+    private EditText _userName;
+    private EditText _passwordText;
+    private Button _loginButton;
+    private TextView _signupLink;
 
     private Response.Listener<String> success;
     private Response.ErrorListener error;
@@ -41,13 +43,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        blindView();
+
+        _loginButton.setOnClickListener(this);
+        _signupLink.setOnClickListener(this);
+    }
+
+    private void blindView() {
         _userName = (EditText) findViewById(R.id.input_username);
         _loginButton = (Button) findViewById(R.id.btn_login);
         _passwordText = (EditText) findViewById(R.id.input_password);
         _signupLink = (TextView) findViewById(R.id.link_signup);
-
-        _loginButton.setOnClickListener(this);
-        _signupLink.setOnClickListener(this);
     }
 
     @Override
@@ -116,7 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Human human = (Human) gson.fromJson(response, Human.class);
             Intent intent = new Intent(LoginActivity.this, BookFeedActivity.class);
             startActivity(intent);
-        }else {
+        } else {
             Toasty.warning(this, "Sai mat khau!", Toast.LENGTH_SHORT).show();
         }
     }

@@ -23,10 +23,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.BookFeedActivity" />
+            android:name=".activity.BookFeedActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.SignUpActivity"
+            android:label="Book Store"
             android:theme="@style/AppTheme.Dark"></activity>
+        <activity
+            android:name=".activity.ViewBookActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.BookFeedActivity" />
+        </activity>
     </application>
 
 </manifest>
