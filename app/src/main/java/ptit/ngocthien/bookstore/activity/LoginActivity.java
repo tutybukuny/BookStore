@@ -65,7 +65,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             case R.id.link_signup: {
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivity(intent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(intent,1);
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 break;
             }
@@ -121,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Gson gson = new Gson();
             Human human = (Human) gson.fromJson(response, Human.class);
             Intent intent = new Intent(LoginActivity.this, BookFeedActivity.class);
+            intent.putExtra("human",human);
             startActivity(intent);
         } else {
             Toasty.warning(this, "Sai mat khau!", Toast.LENGTH_SHORT).show();

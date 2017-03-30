@@ -31,26 +31,106 @@
                 android:scaleType="fitXY"
                 android:layout_gravity="center"/>
 
-            <TextView
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ten Sach"/>
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <TextView
-                android:layout_marginTop="15dp"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tên Sách :"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_book_name"
+                    android:layout_marginLeft="@dimen/marin_text_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ten Sach"/>
-            <TextView
-                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gía Sách :"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_cost"
+                    android:layout_marginLeft="@dimen/marin_text_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ten Sach"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loại sách :"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_type"
+                    android:layout_marginLeft="@dimen/marin_text_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nhà suất bản :"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_nxb"
+                    android:layout_marginLeft="@dimen/marin_text_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tác giả :"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_author"
+                    android:layout_marginLeft="@dimen/marin_text_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
 
         </LinearLayout>
-
     </FrameLayout>
-
-
 </LinearLayout>
