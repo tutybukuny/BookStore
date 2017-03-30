@@ -1,5 +1,6 @@
 package ptit.ngocthien.bookstore.activity;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Book;
+import Model.Human;
 import es.dmoral.toasty.Toasty;
 import ptit.ngocthien.bookstore.BookWithImage;
 import ptit.ngocthien.bookstore.Const.Const;
@@ -52,6 +55,8 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
     private Response.Listener<String> success;
     private Response.ErrorListener error;
 
+    private Human human;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +65,7 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
         blindView();
         prepareUI();
 
+        setView();
         setupRecylerView();
         setupRequest();
 
@@ -69,17 +75,35 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
 
     }
 
-    private void blindView() {
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (data != null)
+                    human = (Human) data.getSerializableExtra("human");
+                break;
+        }
+    }
+
+    private void setView() {
+        View navHeaderView = navigationView.getHeaderView(0);
+        TextView txtUsername = (TextView) navHeaderView.findViewById(R.id.tv_username_nav);
+        TextView txtName = (TextView) navHeaderView.findViewById(R.id.tv_name);
+
+        if (human == null) {
+            txtUsername.setText("Name");
+            txtName.setText("Address");
+        } else {
+            txtUsername.setText(human.getName().getLastName());
+            txtName.setText(human.getAddress().getStreet());
+        }
     }
 
     private void prepareUI() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         createNavigationView();
-
     }
 
     private void createNavigationView() {
@@ -100,6 +124,12 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
         actionBarDrawerToggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void blindView() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     }
 
     @Override
@@ -146,7 +176,7 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
         for (Book book : books) {
             BookWithImage bImage = new BookWithImage();
             bImage.setBook(book);
-            bImage.setImage(Const.images[i]);
+            bImage.setImage(R.drawable.sach);
             i++;
             bookList.add(bImage);
         }
@@ -159,7 +189,7 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
         else item.setCheckable(true);
         drawerLayout.closeDrawers();
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.profile_user:
                 break;
             case R.id.book:
