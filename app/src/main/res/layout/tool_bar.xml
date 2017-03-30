@@ -4,6 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/abc_action_bar_default_height_material"
     app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-    android:background="@color/primary_dark"
+    android:background="@color/primary"
     app:titleTextColor="#ffffff"
     app:collapseIcon="@color/white"/>

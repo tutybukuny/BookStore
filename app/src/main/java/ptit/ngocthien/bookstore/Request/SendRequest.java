@@ -12,7 +12,7 @@ import java.util.Map;
  */
 
 public class SendRequest extends StringRequest {
-    public static final String url = "http://10.127.127.1:8084/KTTKServer/ServiceManagement";
+    public static final String url = "http://192.168.100.5:8080/KTTKServer/ServiceManagement";
 
     protected String action;
     protected String json;
