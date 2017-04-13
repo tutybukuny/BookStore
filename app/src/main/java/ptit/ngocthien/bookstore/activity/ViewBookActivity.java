@@ -35,7 +35,6 @@ public class ViewBookActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra("bundle");
         b = (BookWithImage) bundle.getSerializable("book");
         setView();
-
     }
 
     private void setView() {
@@ -55,5 +54,12 @@ public class ViewBookActivity extends AppCompatActivity {
         tvBookName = (TextView) findViewById(R.id.tv_book_name);
         tvCost = (TextView) findViewById(R.id.tv_cost);
         tvNxb = (TextView) findViewById(R.id.tv_nxb);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_OK);
+        finish();
     }
 }

@@ -67,5 +67,15 @@
             android:text="No account yet? Create one"
             android:textSize="16dip" />
 
+        <TextView
+            android:id="@+id/link_loginFB"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="Login With FaceBook"
+            android:textColor="@color/colorFB"
+            android:textSize="16dip" />
+
     </LinearLayout>
 </ScrollView>

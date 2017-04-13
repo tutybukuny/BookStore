@@ -29,12 +29,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import Model.Book;
 import Model.Human;
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import ptit.ngocthien.bookstore.BookWithImage;
 import ptit.ngocthien.bookstore.Const.Const;
@@ -51,11 +53,15 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private View navHeader;
+    private TextView tvUsername,tvEmail;
+    private CircleImageView ivAvatar;
 
     private Response.Listener<String> success;
     private Response.ErrorListener error;
 
     private Human human;
+    private static final int REQUEST_LOGIN_FB = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,23 +71,40 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
         blindView();
         prepareUI();
 
-        setView();
         setupRecylerView();
         setupRequest();
 
-        SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
-                , success, error, "getBooks", "noaction");
-        Volley.newRequestQueue(this).add(request);
+        Intent intent = getIntent();
+        if (intent.getAction().equals("loginFB")){
+            String name = intent.getStringExtra("name");
+            String email = intent.getStringExtra("email");
+            String imageURL = intent.getStringExtra("imageURL");
+
+            tvUsername.setText(name);
+            tvEmail.setText(email);
+//            Picasso.with(this)
+//                    .load(imageURL)
+//                    .placeholder(R.drawable.user)
+//                    .fit()
+//                    .into(ivAvatar);
+        }else if (intent.getAction().equals("loginAcc")){
+
+        }
+
+//        SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
+//                , success, error, "getBooks", "noaction");
+//        Volley.newRequestQueue(this).add(request);
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1:
-                if (data != null)
-                    human = (Human) data.getSerializableExtra("human");
+        switch (resultCode) {
+            case 3:
+                Toast.makeText(this, "aaaaaaaa", Toast.LENGTH_SHORT).show();
+                break;
+            case RESULT_OK:
                 break;
         }
     }
@@ -130,6 +153,10 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        navHeader = navigationView.getHeaderView(0);
+        tvUsername = (TextView) navHeader.findViewById(R.id.tv_username_nav);
+        tvEmail = (TextView) navHeader.findViewById(R.id.tv_name);
+        ivAvatar = (CircleImageView) navHeader.findViewById(R.id.profile_image);
     }
 
     @Override
@@ -147,7 +174,6 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
@@ -196,44 +222,5 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
                 break;
         }
         return true;
-    }
-
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 }
