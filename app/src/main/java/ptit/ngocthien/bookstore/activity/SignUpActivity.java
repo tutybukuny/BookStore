@@ -11,19 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
-import ptit.ngocthien.bookstore.R;
-import ptit.ngocthien.bookstore.Request.SendRequest;
-import com.google.gson.Gson;
 
-import Model.Address;
-import Model.Birthday;
-import Model.Human;
-import Model.Name;
 import es.dmoral.toasty.Toasty;
+import ptit.ngocthien.bookstore.R;
 
 public class SignUpActivity extends AppCompatActivity {
     EditText _nameText;
@@ -94,28 +86,6 @@ public class SignUpActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
         String reEnterPassword = _reEnterPasswordText.getText().toString();
 
-        Human human = new Human();
-        Name n = new Name();
-        n.setFirstName(name);
-        n.setLastName("");
-        n.setMiddleName("");
-        Address add = new Address();
-        add.setNumber("");
-        add.setCity("");
-        add.setCountry("");
-        add.setStreet("");
-        Birthday birthday = new Birthday();
-        birthday.setDay(0);
-        birthday.setMonth("");
-        birthday.setYear(0);
-
-        human.setAddress(add);
-        human.setBirthday(birthday);
-        human.setName(n);
-
-        SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
-                , success, error, "signup", new Gson().toJson(human));
-        Volley.newRequestQueue(this).add(request);
     }
 
     private void setupRequest() {
@@ -140,8 +110,6 @@ public class SignUpActivity extends AppCompatActivity {
         Log.e("response: ", response);
         if (!response.contains("error")) {
             Toasty.success(this, "Login success!", Toast.LENGTH_SHORT).show();
-            Gson gson = new Gson();
-            Human human = (Human) gson.fromJson(response, Human.class);
         }else {
             Toasty.warning(this, "Khong dang ky duoc", Toast.LENGTH_SHORT).show();
         }

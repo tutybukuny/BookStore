@@ -9,7 +9,7 @@
         <item
             android:id="@+id/book"
             android:checkable="false"
-            android:title="Đặt sách" />
+            android:title="Đặt sản phẩm" />
 
     </group>
 </menu>

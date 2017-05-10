@@ -1,14 +1,10 @@
 package ptit.ngocthien.bookstore.activity;
 
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,8 +12,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -27,101 +21,60 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Model.Book;
-import Model.Human;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
-import ptit.ngocthien.bookstore.BookWithImage;
 import ptit.ngocthien.bookstore.Const.Const;
 import ptit.ngocthien.bookstore.R;
 import ptit.ngocthien.bookstore.Request.SendRequest;
-import ptit.ngocthien.bookstore.adapter.BookAdapter;
+import ptit.ngocthien.bookstore.adapter.ProductAdapter;
+import ptit.ngocthien.bookstore.model.Manufacturer;
+import ptit.ngocthien.bookstore.model.Preview;
+import ptit.ngocthien.bookstore.model.Product;
 
-public class BookFeedActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ProductFeedActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView recyclerView;
-    private BookAdapter adapter;
-    private List<BookWithImage> bookList;
-    ArrayList<Book> books;
+    private ProductAdapter adapter;
+    private List<Product> productList;
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private View navHeader;
-    private TextView tvUsername,tvEmail;
+    private TextView tvUsername, tvEmail;
     private CircleImageView ivAvatar;
 
     private Response.Listener<String> success;
     private Response.ErrorListener error;
 
-    private Human human;
-    private static final int REQUEST_LOGIN_FB = 3;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_feed);
+        setContentView(R.layout.activity_product_feed);
 
         blindView();
         prepareUI();
 
-        setupRecylerView();
         setupRequest();
-
-        Intent intent = getIntent();
-        if (intent.getAction().equals("loginFB")){
-            String name = intent.getStringExtra("name");
-            String email = intent.getStringExtra("email");
-            String imageURL = intent.getStringExtra("imageURL");
-
-            tvUsername.setText(name);
-            tvEmail.setText(email);
-//            Picasso.with(this)
-//                    .load(imageURL)
-//                    .placeholder(R.drawable.user)
-//                    .fit()
-//                    .into(ivAvatar);
-        }else if (intent.getAction().equals("loginAcc")){
-
-        }
-
-//        SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
-//                , success, error, "getBooks", "noaction");
-//        Volley.newRequestQueue(this).add(request);
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            case 3:
-                Toast.makeText(this, "aaaaaaaa", Toast.LENGTH_SHORT).show();
-                break;
-            case RESULT_OK:
-                break;
+        setupRecylerView();
+        try {
+            JSONObject jsonObject = new JSONObject().put("action", "getAllProducts");
+            SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
+                    , success, error, jsonObject.toString());
+            Volley.newRequestQueue(this).add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
-    private void setView() {
-        View navHeaderView = navigationView.getHeaderView(0);
-        TextView txtUsername = (TextView) navHeaderView.findViewById(R.id.tv_username_nav);
-        TextView txtName = (TextView) navHeaderView.findViewById(R.id.tv_name);
-
-        if (human == null) {
-            txtUsername.setText("Name");
-            txtName.setText("Address");
-        } else {
-            txtUsername.setText(human.getName().getLastName());
-            txtName.setText(human.getAddress().getStreet());
-        }
-    }
 
     private void prepareUI() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -169,8 +122,8 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void setupRecylerView() {
-        bookList = new ArrayList<>();
-        adapter = new BookAdapter(this, bookList);
+        productList = new ArrayList<>();
+        adapter = new ProductAdapter(this, productList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -189,22 +142,45 @@ public class BookFeedActivity extends AppCompatActivity implements NavigationVie
         error = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toasty.error(BookFeedActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                Toasty.error(ProductFeedActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
             }
         };
     }
 
     private void getListBook(String response) {
-        TypeToken<ArrayList<Book>> token = new TypeToken<ArrayList<Book>>() {
-        };
-        books = new Gson().fromJson(response, token.getType());
-        int i = 0;
-        for (Book book : books) {
-            BookWithImage bImage = new BookWithImage();
-            bImage.setBook(book);
-            bImage.setImage(R.drawable.sach);
-            i++;
-            bookList.add(bImage);
+        JSONObject jobj = null;
+        response = response.replaceAll("localhost", Const.IP);
+        try {
+            jobj = new JSONObject(response);
+            JSONArray jsonArray = jobj.getJSONArray("products");
+            Log.e("size", jsonArray.length() + "");
+            for (int i = 0; i < jsonArray.length()+1; i++) {
+
+                JSONObject jsProduct = jsonArray.getJSONObject(i);
+                int id = jsProduct.getInt("id");
+                String name = jsProduct.getString("name");
+                String des = jsProduct.getString("description");
+                float cost = (float) jsProduct.getDouble("cost");
+
+                JSONObject jsPreview = jsProduct.getJSONObject("preview");
+                int idPreview = jsPreview.getInt("id");
+                String intro = jsPreview.getString("intro");
+                String image = jsPreview.getString("image");
+                Preview preview = new Preview(idPreview, intro, image);
+
+                JSONObject jsManu = jsProduct.getJSONObject("manufacturer");
+                int idManu = jsManu.getInt("id");
+                String nameManu = jsManu.getString("name");
+                String desManu = jsManu.getString("des");
+                Manufacturer manufacturer = new Manufacturer(idManu, nameManu, desManu);
+
+                Product product = new Product(id, name, des, cost, preview, manufacturer);
+                productList.add(product);
+
+                Log.e("product size :", i + "");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         adapter.notifyDataSetChanged();
     }

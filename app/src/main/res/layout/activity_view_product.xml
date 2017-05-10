@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="ptit.ngocthien.bookstore.activity.ViewBookActivity">
+    tools:context="ptit.ngocthien.bookstore.activity.ViewProductActivity">
 
     <include
-        android:id="@+id/tb_view_book"
+        android:id="@+id/tb_view_product"
         layout="@layout/tool_bar" />
 
     <FrameLayout
@@ -40,11 +40,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tên Sách :"
+                    android:text="Tên Sản Phẩm :"
                     android:textColor="@color/black"/>
 
                 <TextView
-                    android:id="@+id/tv_book_name"
+                    android:id="@+id/tv_product_name"
                     android:layout_marginLeft="@dimen/marin_text_row"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gía Sách :"
+                    android:text="Gía Sản Phẩm :"
                     android:textColor="@color/black"/>
 
                 <TextView
@@ -80,7 +80,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Loại sách :"
+                    android:text="Loại Sản Phẩm :"
                     android:textColor="@color/black"/>
 
                 <TextView
@@ -100,7 +100,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nhà suất bản :"
+                    android:text="Nhà sản xuất :"
                     android:textColor="@color/black"/>
 
                 <TextView
@@ -120,7 +120,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tác giả :"
+                    android:text="Giới thiệu:"
                     android:textColor="@color/black"/>
 
                 <TextView

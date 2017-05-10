@@ -21,10 +21,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-
-import ptit.ngocthien.bookstore.R;
-import ptit.ngocthien.bookstore.Request.SendRequest;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -34,8 +30,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
@@ -43,14 +39,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import Model.Account;
-import Model.Human;
 import es.dmoral.toasty.Toasty;
+import ptit.ngocthien.bookstore.R;
+import ptit.ngocthien.bookstore.Request.SendRequest;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
-    private static final int REQUEST_SIGNUP = 0;
-    private static final int REQUEST_LOGIN_FB = 3;
 
     private static LoginActivity mainActivity;
     private CallbackManager callbackManager;
@@ -106,15 +100,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.link_signup: {
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 break;
             }
 
-            case R.id.link_loginFB:{
-//                if (isLoggedInFaceBook()){
-//                    LoginManager.getInstance().logOut();
-//                }
+            case R.id.link_loginFB: {
+                if (isLoggedInFaceBook()) {
+                    LoginManager.getInstance().logOut();
+                }
                 loginFaceBook();
                 break;
             }
@@ -128,9 +122,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         String username = _userName.getText().toString().trim();
         String password = _passwordText.getText().toString().trim();
-        Account acc = new Account();
-        acc.setUsername(username);
-        acc.setPassword(password);
+
+        JSONObject jsonObjectSend = new JSONObject();
+        try {
+            jsonObjectSend.put("action", "login");
+            JSONObject jsonAcc = new JSONObject();
+            jsonAcc.put("username",username);
+            jsonAcc.put("password",password);
+            jsonObjectSend.putOpt("json",jsonAcc);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         setupRequest();
 
@@ -141,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressDialog.show();
 
         SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
-                , success, error, "login", new Gson().toJson(acc));
+                , success, error, jsonObjectSend.toString());
         Volley.newRequestQueue(this).add(request);
 
     }
@@ -164,14 +166,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void doLogin(String response) {
-        if (response.contains("acc")) {
+        if (response.contains("succes")) {
             Toasty.success(this, "Login success!", Toast.LENGTH_SHORT).show();
-            Gson gson = new Gson();
-            Human human = (Human) gson.fromJson(response, Human.class);
-            Intent intent = new Intent(LoginActivity.this, BookFeedActivity.class);
-            intent.putExtra("human",human);
-            intent.setAction("loginAcc");
+            Intent intent = new Intent(LoginActivity.this, ProductFeedActivity.class);
             startActivity(intent);
+
         } else {
             Toasty.warning(this, "Sai mat khau!", Toast.LENGTH_SHORT).show();
         }
@@ -205,10 +204,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         PackageInfo packageInfo;
         String key = null;
         try {
-            //getting application package name, as defined in manifest
             String packageName = context.getApplicationContext().getPackageName();
-
-            //Retriving package info
             packageInfo = context.getPackageManager().getPackageInfo(packageName,
                     PackageManager.GET_SIGNATURES);
 
@@ -224,8 +220,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         } catch (PackageManager.NameNotFoundException e1) {
             Log.e("Name not found", e1.toString());
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             Log.e("No such an algorithm", e.toString());
         } catch (Exception e) {
             Log.e("Exception", e.toString());
@@ -234,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return key;
     }
 
-    public void initFaceBook () {
+    public void initFaceBook() {
         loginResult = new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -251,16 +246,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 String email = object.optString(getString(R.string.email));
                                 String link = object.optString(getString(R.string.link));
                                 URL imageURL = extractFacebookIcon(id);
-                                Log.d("name: ",name);
-                                Log.d("id: ",id);
-                                Log.d("email: ",email);
-                                Log.d("link: ",link);
-                                Log.d("imageURL: ",imageURL.toString());
 
-                                Intent intent = new Intent(LoginActivity.this, BookFeedActivity.class);
-                                intent.putExtra("name",name);
-                                intent.putExtra("email",email);
-                                intent.putExtra("imageURL",imageURL.toString());
+                                Log.d("name: ", name);
+                                Log.d("id: ", id);
+                                Log.d("email: ", email);
+                                Log.d("link: ", link);
+                                Log.d("imageURL: ", imageURL.toString());
+
+                                Intent intent = new Intent(LoginActivity.this, ProductFeedActivity.class);
+                                intent.putExtra("name", name);
+                                intent.putExtra("email", email);
+                                intent.putExtra("imageURL", imageURL.toString());
                                 intent.setAction("loginFB");
                                 startActivity(intent);
                             }
@@ -299,7 +295,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //Login facebook with permisstion
     public void loginFaceBook() {
-        LoginManager.getInstance().logInWithReadPermissions(mainActivity, Arrays.asList("public_profile", "user_friends","email"));
+        LoginManager.getInstance().logInWithReadPermissions(mainActivity, Arrays.asList("public_profile", "user_friends", "email"));
     }
 
     //Hàm check login facebook
