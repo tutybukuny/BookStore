@@ -100,31 +100,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nhà sản xuất :"
+                    android:text="Nhà sản xuất:"
                     android:textColor="@color/black"/>
 
                 <TextView
-                    android:id="@+id/tv_nxb"
-                    android:layout_marginLeft="@dimen/marin_text_row"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Giới thiệu:"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:id="@+id/tv_author"
+                    android:id="@+id/tv_nsx"
                     android:layout_marginLeft="@dimen/marin_text_row"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

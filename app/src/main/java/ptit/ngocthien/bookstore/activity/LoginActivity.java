@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -41,6 +40,7 @@ import java.util.Arrays;
 
 import es.dmoral.toasty.Toasty;
 import ptit.ngocthien.bookstore.R;
+import ptit.ngocthien.bookstore.Request.AppController;
 import ptit.ngocthien.bookstore.Request.SendRequest;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -144,7 +144,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
                 , success, error, jsonObjectSend.toString());
-        Volley.newRequestQueue(this).add(request);
+
+        AppController.getInstance().addToRequestQueue(request);
 
     }
 

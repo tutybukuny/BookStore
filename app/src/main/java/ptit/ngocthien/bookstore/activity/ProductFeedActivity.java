@@ -1,5 +1,6 @@
 package ptit.ngocthien.bookstore.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,7 +21,6 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,8 +33,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import ptit.ngocthien.bookstore.Const.Const;
 import ptit.ngocthien.bookstore.R;
+import ptit.ngocthien.bookstore.Request.AppController;
 import ptit.ngocthien.bookstore.Request.SendRequest;
 import ptit.ngocthien.bookstore.adapter.ProductAdapter;
+import ptit.ngocthien.bookstore.event.OnItemClickLisener;
+import ptit.ngocthien.bookstore.event.RecylerItemClickListener;
 import ptit.ngocthien.bookstore.model.Manufacturer;
 import ptit.ngocthien.bookstore.model.Preview;
 import ptit.ngocthien.bookstore.model.Product;
@@ -69,7 +72,7 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
             JSONObject jsonObject = new JSONObject().put("action", "getAllProducts");
             SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
                     , success, error, jsonObject.toString());
-            Volley.newRequestQueue(this).add(request);
+               AppController.getInstance().addToRequestQueue(request);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -129,6 +132,16 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnItemTouchListener(new RecylerItemClickListener(this, new OnItemClickLisener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(ProductFeedActivity.this,ViewProductActivity.class);
+                Product product = productList.get(position);
+                intent.putExtra("product",product);
+                startActivity(intent);
+            }
+        }));
     }
 
     private void setupRequest() {

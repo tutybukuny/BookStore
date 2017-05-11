@@ -10,12 +10,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import ptit.ngocthien.bookstore.R;
+import ptit.ngocthien.bookstore.model.Product;
 
 public class ViewProductActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ImageView ivItemProduct;
-    TextView tvType, tvBookName, tvCost, tvNxb, tvAuthor;
+    TextView tvType, tvProductName, tvCost, tvNsx;
+    Product product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,27 +31,23 @@ public class ViewProductActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra("bundle");
+        product = (Product) intent.getSerializableExtra("product");
         setView();
     }
 
     private void setView() {
-//        Picasso.with(this).load(b.getImage()).into(ivItemBook);
-        Picasso.with(this).load(R.drawable.sach).into(ivItemProduct);
-//        tvBookName.setText(b.getBook().getName());
-//        tvType.setText(b.getBook().getBookType().getName());
-//        tvCost.setText(String.valueOf(b.getBook().getCost()));
-//        tvAuthor.setText(b.getBook().getAuthor().getName());
-//        tvNxb.setText(b.getBook().getPublisher().getName());
+        Picasso.with(this).load(product.getPreview().getImage()).into(ivItemProduct);
+        tvProductName.setText(product.getName());
+        tvCost.setText(String.valueOf(product.getCost()));
+        tvNsx.setText(product.getManufacturer().getName());
     }
 
     private void blindView() {
         ivItemProduct = (ImageView) findViewById(R.id.iv_item_book);
         tvType = (TextView) findViewById(R.id.tv_type);
-        tvAuthor = (TextView) findViewById(R.id.tv_author);
-        tvBookName = (TextView) findViewById(R.id.tv_product_name);
+        tvNsx = (TextView) findViewById(R.id.tv_nsx);
+        tvProductName = (TextView) findViewById(R.id.tv_product_name);
         tvCost = (TextView) findViewById(R.id.tv_cost);
-        tvNxb = (TextView) findViewById(R.id.tv_nxb);
     }
 
     @Override

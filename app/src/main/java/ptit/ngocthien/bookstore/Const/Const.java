@@ -5,5 +5,5 @@ package ptit.ngocthien.bookstore.Const;
  */
 
 public class Const {
-    public static final String IP = "172.20.10.4";
+    public static final String IP = "192.168.1.114";
 }

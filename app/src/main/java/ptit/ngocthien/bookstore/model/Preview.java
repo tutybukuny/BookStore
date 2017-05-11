@@ -1,10 +1,12 @@
 package ptit.ngocthien.bookstore.model;
 
+import java.io.Serializable;
+
 /**
  * Created by TrungNguyen on 5/10/2017.
  */
 
-public class Preview {
+public class Preview implements Serializable{
     private int id;
     private String intro;
     private String image;
