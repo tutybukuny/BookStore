@@ -36,8 +36,8 @@ import ptit.ngocthien.bookstore.R;
 import ptit.ngocthien.bookstore.Request.AppController;
 import ptit.ngocthien.bookstore.Request.SendRequest;
 import ptit.ngocthien.bookstore.adapter.ProductAdapter;
-import ptit.ngocthien.bookstore.event.OnItemClickLisener;
-import ptit.ngocthien.bookstore.event.RecylerItemClickListener;
+import ptit.ngocthien.bookstore.event.OnItemClickListener;
+import ptit.ngocthien.bookstore.event.RecyclerItemClickListener;
 import ptit.ngocthien.bookstore.model.Manufacturer;
 import ptit.ngocthien.bookstore.model.Preview;
 import ptit.ngocthien.bookstore.model.Product;
@@ -72,7 +72,7 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
             JSONObject jsonObject = new JSONObject().put("action", "getAllProducts");
             SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
                     , success, error, jsonObject.toString());
-               AppController.getInstance().addToRequestQueue(request);
+            AppController.getInstance().addToRequestQueue(request);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -133,12 +133,12 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        recyclerView.addOnItemTouchListener(new RecylerItemClickListener(this, new OnItemClickLisener() {
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(ProductFeedActivity.this,ViewProductActivity.class);
+                Intent intent = new Intent(ProductFeedActivity.this, ViewProductActivity.class);
                 Product product = productList.get(position);
-                intent.putExtra("product",product);
+                intent.putExtra("product", product);
                 startActivity(intent);
             }
         }));
@@ -167,7 +167,7 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
             jobj = new JSONObject(response);
             JSONArray jsonArray = jobj.getJSONArray("products");
             Log.e("size", jsonArray.length() + "");
-            for (int i = 0; i < jsonArray.length()+1; i++) {
+            for (int i = 0; i < jsonArray.length() + 1; i++) {
 
                 JSONObject jsProduct = jsonArray.getJSONObject(i);
                 int id = jsProduct.getInt("id");

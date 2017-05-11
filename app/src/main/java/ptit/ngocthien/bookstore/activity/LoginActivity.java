@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
 
         } else {
-            Toasty.warning(this, "Sai mat khau!", Toast.LENGTH_SHORT).show();
+            Toasty.warning(this, "Wrong username or password!", Toast.LENGTH_SHORT).show();
         }
     }
 

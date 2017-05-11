@@ -10,13 +10,13 @@ import android.view.View;
  * Created by TrungNguyen on 5/11/2017.
  */
 
-public class RecylerItemClickListener implements RecyclerView.OnItemTouchListener {
+public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
-    private OnItemClickLisener mListener;
+    private OnItemClickListener mListener;
     private GestureDetector mGestureDetector;
 
-    public RecylerItemClickListener(Context context,OnItemClickLisener lisener){
-        mListener = lisener;
+    public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
+        mListener = listener;
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent motionEvent) {
