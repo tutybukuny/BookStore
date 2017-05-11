@@ -5,5 +5,6 @@ package ptit.ngocthien.bookstore.Const;
  */
 
 public class Const {
-    public static final String IP = "192.168.1.114";
+    public static final String LOCAL_HOST = "localhost";
+    public static String DOMAIN = LOCAL_HOST;
 }

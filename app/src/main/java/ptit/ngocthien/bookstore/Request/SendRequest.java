@@ -11,7 +11,7 @@ import ptit.ngocthien.bookstore.Const.Const;
 
 public class SendRequest extends StringRequest {
 
-    public static final String url = "http://" + Const.IP + ":8080/Supermarket-war/webresources/service";
+    public static final String url = "http://" + Const.DOMAIN + ":8080/Supermarket-war/webresources/service";
 
     String json;
 
@@ -26,6 +26,7 @@ public class SendRequest extends StringRequest {
         return json.getBytes();
     }
 
+    @Override
     public String getBodyContentType() {
         return "application/json; charset=utf-8";
     }

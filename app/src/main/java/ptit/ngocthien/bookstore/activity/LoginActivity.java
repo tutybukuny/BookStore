@@ -39,6 +39,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import es.dmoral.toasty.Toasty;
+import ptit.ngocthien.bookstore.Const.Const;
 import ptit.ngocthien.bookstore.R;
 import ptit.ngocthien.bookstore.Request.AppController;
 import ptit.ngocthien.bookstore.Request.SendRequest;
@@ -50,11 +51,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private CallbackManager callbackManager;
     private FacebookCallback<LoginResult> loginResult;
 
-    private EditText _userName;
-    private EditText _passwordText;
+    private EditText _userNameText, _passwordText, _domainText;
     private Button _loginButton;
-    private TextView tvLinkFB;
-    private TextView _signupLink;
+    private TextView tvLinkFB, _signupLink;
 
     private Response.Listener<String> success;
     private Response.ErrorListener error;
@@ -83,9 +82,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void blindView() {
-        _userName = (EditText) findViewById(R.id.input_username);
-        _loginButton = (Button) findViewById(R.id.btn_login);
+        _userNameText = (EditText) findViewById(R.id.input_username);
         _passwordText = (EditText) findViewById(R.id.input_password);
+        _domainText = (EditText) findViewById(R.id.input_domain);
+        _loginButton = (Button) findViewById(R.id.btn_login);
         _signupLink = (TextView) findViewById(R.id.link_signup);
         tvLinkFB = (TextView) findViewById(R.id.link_loginFB);
     }
@@ -120,16 +120,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             onLoginFailed();
             return;
         }
-        String username = _userName.getText().toString().trim();
+        String username = _userNameText.getText().toString().trim();
         String password = _passwordText.getText().toString().trim();
+        Const.DOMAIN = _domainText.getText().toString().trim();
 
         JSONObject jsonObjectSend = new JSONObject();
         try {
             jsonObjectSend.put("action", "login");
             JSONObject jsonAcc = new JSONObject();
-            jsonAcc.put("username",username);
-            jsonAcc.put("password",password);
-            jsonObjectSend.putOpt("json",jsonAcc);
+            jsonAcc.put("username", username);
+            jsonAcc.put("password", password);
+            jsonObjectSend.putOpt("json", jsonAcc);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -183,13 +184,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public boolean validate() {
         boolean valid = true;
+        String username = _userNameText.getText().toString();
         String password = _passwordText.getText().toString();
+        String domain = _domainText.getText().toString();
 
-        if (_userName.getText().toString().trim().length() == 0 || _passwordText.getText().toString().trim().length() == 0) {
+        if (username.trim().length() == 0 || password.trim().length() == 0 || domain.length() == 0) {
             valid = false;
         } else {
-            _userName.setError(null);
+            _userNameText.setError(null);
             _passwordText.setError(null);
+            _domainText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
@@ -296,7 +300,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //Login facebook with permisstion
     public void loginFaceBook() {
-        LoginManager.getInstance().logInWithReadPermissions(mainActivity, Arrays.asList("public_profile", "user_friends", "email"));
+        LoginManager.getInstance().logInWithReadPermissions(mainActivity,
+                Arrays.asList("public_profile", "user_friends", "email"));
     }
 
     //Hàm check login facebook

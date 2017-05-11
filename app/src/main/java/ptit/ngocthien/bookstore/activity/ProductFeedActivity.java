@@ -162,7 +162,7 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
 
     private void getListBook(String response) {
         JSONObject jobj = null;
-        response = response.replaceAll("localhost", Const.IP);
+        response = response.replaceAll("localhost", Const.DOMAIN);
         try {
             jobj = new JSONObject(response);
             JSONArray jsonArray = jobj.getJSONArray("products");
