@@ -168,7 +168,6 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
             JSONArray jsonArray = jobj.getJSONArray("products");
             Log.e("size", jsonArray.length() + "");
             for (int i = 0; i < jsonArray.length() + 1; i++) {
-
                 JSONObject jsProduct = jsonArray.getJSONObject(i);
                 int id = jsProduct.getInt("id");
                 String name = jsProduct.getString("name");
@@ -207,7 +206,9 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
         switch (item.getItemId()) {
             case R.id.profile_user:
                 break;
-            case R.id.book:
+            case R.id.menu_watch_cart:
+                Intent intent = new Intent(this,ViewCartActivity.class);
+                startActivity(intent);
                 break;
         }
         return true;

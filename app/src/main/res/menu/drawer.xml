@@ -7,9 +7,9 @@
             android:title="Xem thông tin tài khoản" />
 
         <item
-            android:id="@+id/book"
+            android:id="@+id/menu_watch_cart"
             android:checkable="false"
-            android:title="Đặt sản phẩm" />
+            android:title="Xem Giỏ Hàng" />
 
     </group>
 </menu>

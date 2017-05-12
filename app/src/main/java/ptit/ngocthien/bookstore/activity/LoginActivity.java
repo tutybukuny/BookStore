@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import es.dmoral.toasty.Toasty;
@@ -43,6 +44,9 @@ import ptit.ngocthien.bookstore.Const.Const;
 import ptit.ngocthien.bookstore.R;
 import ptit.ngocthien.bookstore.Request.AppController;
 import ptit.ngocthien.bookstore.Request.SendRequest;
+import ptit.ngocthien.bookstore.model.Cart;
+import ptit.ngocthien.bookstore.model.Human;
+import ptit.ngocthien.bookstore.model.SelectedProduct;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
@@ -58,6 +62,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Response.Listener<String> success;
     private Response.ErrorListener error;
     private ProgressDialog progressDialog;
+
+    public static int humanId;
+    public static Cart cart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,14 +175,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void doLogin(String response) {
-        if (response.contains("succes")) {
-            Toasty.success(this, "Login success!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, ProductFeedActivity.class);
-            startActivity(intent);
-
-        } else {
-            Toasty.warning(this, "Wrong username or password!", Toast.LENGTH_SHORT).show();
+        try {
+            JSONObject jsonReq = new JSONObject(response);
+            String result = jsonReq.getString("result");
+            if (result.equals("succes")) {
+                Toasty.success(this, "Login success!", Toast.LENGTH_SHORT).show();
+                humanId = jsonReq.getInt("humanId");
+                Human human = new Human(humanId,"Customer");
+                cart = new Cart();
+                cart.setHuman(human);
+                cart.setListSeleProducts(new ArrayList<SelectedProduct>());
+                Log.e("humanId : " , humanId+"");
+                Intent intent = new Intent(LoginActivity.this, ProductFeedActivity.class);
+                startActivity(intent);
+            } else {
+                Toasty.warning(this, "Wrong username or password!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
     }
 
     public void onLoginFailed() {
