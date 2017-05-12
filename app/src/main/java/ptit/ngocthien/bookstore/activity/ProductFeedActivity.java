@@ -38,8 +38,7 @@ import ptit.ngocthien.bookstore.Request.SendRequest;
 import ptit.ngocthien.bookstore.adapter.ProductAdapter;
 import ptit.ngocthien.bookstore.event.OnItemClickListener;
 import ptit.ngocthien.bookstore.event.RecyclerItemClickListener;
-import ptit.ngocthien.bookstore.model.Manufacturer;
-import ptit.ngocthien.bookstore.model.Preview;
+import ptit.ngocthien.bookstore.helper.JsonHelper;
 import ptit.ngocthien.bookstore.model.Product;
 
 public class ProductFeedActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -169,27 +168,10 @@ public class ProductFeedActivity extends AppCompatActivity implements Navigation
             Log.e("size", jsonArray.length() + "");
             for (int i = 0; i < jsonArray.length() + 1; i++) {
                 JSONObject jsProduct = jsonArray.getJSONObject(i);
-                int id = jsProduct.getInt("id");
-                String name = jsProduct.getString("name");
-                String des = jsProduct.getString("description");
-                float cost = (float) jsProduct.getDouble("cost");
 
-                JSONObject jsPreview = jsProduct.getJSONObject("preview");
-                int idPreview = jsPreview.getInt("id");
-                String intro = jsPreview.getString("intro");
-                String image = jsPreview.getString("image");
-                Preview preview = new Preview(idPreview, intro, image);
-
-                JSONObject jsManu = jsProduct.getJSONObject("manufacturer");
-                int idManu = jsManu.getInt("id");
-                String nameManu = jsManu.getString("name");
-                String desManu = jsManu.getString("des");
-                Manufacturer manufacturer = new Manufacturer(idManu, nameManu, desManu);
-
-                Product product = new Product(id, name, des, cost, preview, manufacturer);
+                JsonHelper jsonHelper = new JsonHelper();
+                Product product = jsonHelper.parseProduct(jsProduct);
                 productList.add(product);
-
-                Log.e("product size :", i + "");
             }
         } catch (JSONException e) {
             e.printStackTrace();

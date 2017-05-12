@@ -1,6 +1,5 @@
 package ptit.ngocthien.bookstore.activity;
 
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,10 +16,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
@@ -28,7 +23,7 @@ import ptit.ngocthien.bookstore.R;
 import ptit.ngocthien.bookstore.Request.AppController;
 import ptit.ngocthien.bookstore.Request.SendRequest;
 import ptit.ngocthien.bookstore.adapter.SelecProductAdapter;
-import ptit.ngocthien.bookstore.model.SelectedProduct;
+import ptit.ngocthien.bookstore.helper.JsonHelper;
 
 import static ptit.ngocthien.bookstore.activity.LoginActivity.cart;
 
@@ -89,37 +84,10 @@ public class ViewCartActivity extends AppCompatActivity implements View.OnClickL
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (cart.getListSeleProducts().size() > 0) {
                             setupRequest();
-                            JSONObject jsonObject = new JSONObject();
-                            try {
-                                jsonObject.put("action", "sendCart");
-
-                                JSONObject objectCart = new JSONObject();
-
-                                JSONObject ojectHuman = new JSONObject();
-                                ojectHuman.put("humanId",cart.getHuman().getId());
-                                ojectHuman.put("discri",cart.getHuman().getDiscriminator());
-                                objectCart.put("human",ojectHuman);
-
-                                JSONArray spArray = new JSONArray();
-                                float totalCost = 0;
-                                for (SelectedProduct sp : cart.getListSeleProducts()){
-                                    totalCost = totalCost + sp.getProduct().getCost();
-
-                                    JSONObject spOject = new JSONObject();
-                                    spOject.put("productId",sp.getProduct().getId());
-                                    spArray.put(spOject);
-                                }
-                                objectCart.put("selectproducts",spArray);
-                                objectCart.put("totalCost",totalCost);
-
-                                jsonObject.put("cart",objectCart);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            JsonHelper jsonHelper = new JsonHelper();
                             SendRequest request = new SendRequest(Request.Method.POST, SendRequest.url
-                                    , success, error, jsonObject.toString());
-                            Log.e("json add to card : ", jsonObject.toString());
+                                    , success, error, jsonHelper.sendCard());
+                            Log.e("json add to card : ", jsonHelper.sendCard());
                             AppController.getInstance().addToRequestQueue(request);
                         }
                         dialogInterface.dismiss();
@@ -133,7 +101,6 @@ public class ViewCartActivity extends AppCompatActivity implements View.OnClickL
                 });
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
-
                 break;
         }
     }
